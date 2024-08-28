@@ -121,7 +121,6 @@ download_thread = threading.Thread(target=download_file, args=(url, filename))
 download_thread.start()
 
 print("The model weights are being downloaded in the background.")
-print("You can continue using your system. The download will complete automatically.")
 print("To check the download status, you can run this script again with the --check-download flag.")
 
 if __name__ == "__main__":
