@@ -106,7 +106,19 @@ def download_file(url, filename):
                 file.write(chunk)
     download_complete.set()
     print(f"Download of {filename} completed.")
-    
+
+
+def download_config_file(url, directory, filename):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    filepath = os.path.join(directory, filename)
+    print(f"Downloading config file from {url}...")
+    response = requests.get(url)
+    with open(filepath, 'wb') as file:
+        file.write(response.content)
+    print(f"Config file downloaded and saved as {filepath}")
+    return filepath
+
 
 def check_download_status():
     if download_complete.is_set():
@@ -121,6 +133,7 @@ download_thread = threading.Thread(target=download_file, args=(url, filename))
 download_thread.start()
 
 print("The model weights are being downloaded in the background.")
+print("You can continue using your system. The download will complete automatically.")
 print("To check the download status, you can run this script again with the --check-download flag.")
 
 if __name__ == "__main__":
@@ -135,4 +148,7 @@ if __name__ == "__main__":
     print("Starting image captioning process...")
     print(f"Saving to this Directory: {args.directory_path}")
     process_directory(args.directory_path)
-    print("Image captioning process completed. Now run the run.py")
+    config_url = "https://raw.githubusercontent.com/jarvislabsai/comfyui_workflows/main/config.yaml"
+    config_directory = "/home/ai-toolkit/config"
+    config_filename = "config.yaml"
+    download_config_file(config_url, config_directory, config_filename)
