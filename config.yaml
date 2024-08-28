@@ -22,7 +22,7 @@ config:
       datasets:
         # on windows, escape back slashes with another backslash so
         # "C:\\path\\to\\images\\folder"
-        - folder_path: "/dataset/mahesh_dataset/"
+        - folder_path: "/home/dataset/"
           caption_ext: "txt"
           caption_dropout_rate: 0.05  # will drop out the caption 5% of time
           shuffle_tokens: false  # shuffle caption order, split by commas
@@ -85,5 +85,5 @@ config:
         sample_steps: 4  # 1 - 4 works well
 # you can add any additional meta info here. [name] is replaced with config name at top
 meta:
-  name: "Done in jarvislabs"
+  name: "Done at JarvisLabs"
   version: '1.0'
