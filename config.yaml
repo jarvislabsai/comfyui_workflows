@@ -4,7 +4,7 @@ config:
   name: "jarvislabs-finetuned-output"
   process:
     - type: 'sd_trainer'
-      training_folder: "output"
+      training_folder: "/workspace/outputs"
       device: cuda:0
       trigger_word: "person"
       network:
@@ -22,7 +22,7 @@ config:
       datasets:
         # on windows, escape back slashes with another backslash so
         # "C:\\path\\to\\images\\folder"
-        - folder_path: "/home/dataset/"
+        - folder_path: "/workspace/dataset/"
           caption_ext: "txt"
           caption_dropout_rate: 0.05  # will drop out the caption 5% of time
           shuffle_tokens: false  # shuffle caption order, split by commas
@@ -54,8 +54,8 @@ config:
         dtype: bf16
       model:
         # huggingface model name or path
-        name_or_path: "black-forest-labs/FLUX.1-schnell"
-        assistant_lora_path: "/home/ai-toolkit/pytorch_lora_weights.safetensors" # Required for flux schnell training
+        name_or_path: "/workspace/flux/models/FLUX.1-schnell"
+        assistant_lora_path: "/workspace/flux/models/pytorch_lora_weights.safetensors" # Required for flux schnell training
         is_flux: true
         quantize: true  # run 8bit mixed precision
         # low_vram is painfully slow to fuse in the adapter avoid it unless absolutely necessary
