@@ -6,14 +6,14 @@ config:
     - type: 'sd_trainer'
       training_folder: "/workspace/outputs"
       device: cuda:0
-      trigger_word: "{{TRIGGER_WORD}}"
+      trigger_word: "person"
       network:
         type: "lora"
         linear: 16
         linear_alpha: 16
       save:
         dtype: float16
-        save_every: {{CHECKPOINT_SAVING_INTERVAL}}
+        save_every: 250
         max_step_saves_to_keep: 4
         push_to_hub: false
       datasets:
@@ -25,7 +25,7 @@ config:
           resolution: [ 512, 768, 1024 ]
       train:
         batch_size: 1
-        steps: {{STEPS}}
+        steps: 1000
         gradient_accumulation_steps: 1
         train_unet: true
         train_text_encoder: false
