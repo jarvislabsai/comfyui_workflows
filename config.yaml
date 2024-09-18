@@ -6,68 +6,48 @@ config:
     - type: 'sd_trainer'
       training_folder: "/workspace/outputs"
       device: cuda:0
-      trigger_word: "person"
+      trigger_word: "{{TRIGGER_WORD}}"
       network:
         type: "lora"
         linear: 16
         linear_alpha: 16
       save:
-        dtype: float16 # precision to save
-        save_every: 250 # save every this many steps
-        max_step_saves_to_keep: 4 # how many intermittent saves to keep
-        push_to_hub: false #change this to True to push your trained model to Hugging Face.
-        # You can either set up a HF_TOKEN env variable or you'll be prompted to log-in         
-#       hf_repo_id: your-username/your-model-slug
-#       hf_private: true #whether the repo is private or public        
+        dtype: float16
+        save_every: {{CHECKPOINT_SAVING_INTERVAL}}
+        max_step_saves_to_keep: 4
+        push_to_hub: false
       datasets:
-        # on windows, escape back slashes with another backslash so
-        # "C:\\path\\to\\images\\folder"
         - folder_path: "/workspace/dataset/"
           caption_ext: "txt"
-          caption_dropout_rate: 0.05  # will drop out the caption 5% of time
-          shuffle_tokens: false  # shuffle caption order, split by commas
-          cache_latents_to_disk: true  # leave this true unless you know what you're doing
-          resolution: [ 512, 768, 1024 ]  # flux enjoys multiple resolutions
+          caption_dropout_rate: 0.05
+          shuffle_tokens: false
+          cache_latents_to_disk: true
+          resolution: [ 512, 768, 1024 ]
       train:
         batch_size: 1
-        steps: 1000  # total number of steps to train 500 - 4000 is a good range
+        steps: {{STEPS}}
         gradient_accumulation_steps: 1
         train_unet: true
-        train_text_encoder: false  # probably won't work with flux
-        gradient_checkpointing: true  # need the on unless you have a ton of vram
-        noise_scheduler: "flowmatch" # for training only
+        train_text_encoder: false
+        gradient_checkpointing: true
+        noise_scheduler: "flowmatch"
         optimizer: "adamw8bit"
         lr: 1e-4
-        # uncomment this to skip the pre training sample
-#        skip_first_sample: true
-        # uncomment to completely disable sampling
-#        disable_sampling: true
-        # uncomment to use new bell curved weighting. Experimental but may produce better results
-#        linear_timesteps: true
-
-        # ema will smooth out learning, but could slow it down. Recommended to leave on.
         ema_config:
           use_ema: true
           ema_decay: 0.99
-
-        # will probably need this if gpu supports it for flux, other dtypes may not work correctly
         dtype: bf16
       model:
-        # huggingface model name or path
         name_or_path: "black-forest-labs/FLUX.1-schnell"
-        assistant_lora_path: "ostris/FLUX.1-schnell-training-adapter" # Required for flux schnell training
+        assistant_lora_path: "ostris/FLUX.1-schnell-training-adapter"
         is_flux: true
-        quantize: true  # run 8bit mixed precision
-        # low_vram is painfully slow to fuse in the adapter avoid it unless absolutely necessary
-#        low_vram: true  # uncomment this if the GPU is connected to your monitors. It will use less vram to quantize, but is slower.
+        quantize: true
       sample:
-        sampler: "flowmatch" # must match train.noise_scheduler
-        sample_every: 250 # sample every this many steps
+        sampler: "flowmatch"
+        sample_every: 250
         width: 1024
         height: 1024
         prompts:
-          # you can add [trigger] to the prompts here and it will be replaced with the trigger word
-#          - "[trigger] holding a sign that says 'I LOVE PROMPTS!'"\
           - "woman with red hair, playing chess at the park, bomb going off in the background"
           - "a woman holding a coffee cup, in a beanie, sitting at a cafe"
           - "a horse is a DJ at a night club, fish eye lens, smoke machine, lazer lights, holding a martini"
@@ -78,12 +58,11 @@ config:
           - "photo of a man, white background, medium shot, modeling clothing, studio lighting, white backdrop"
           - "a man holding a sign that says, 'this is a sign'"
           - "a bulldog, in a post apocalyptic world, with a shotgun, in a leather jacket, in a desert, with a motorcycle"
-        neg: ""  # not used on flux
+        neg: ""
         seed: 42
         walk_seed: true
-        guidance_scale: 1  # schnell does not do guidance
-        sample_steps: 4  # 1 - 4 works well
-# you can add any additional meta info here. [name] is replaced with config name at top
+        guidance_scale: 1
+        sample_steps: 4
 meta:
   name: "Done at JarvisLabs"
   version: '1.0'
