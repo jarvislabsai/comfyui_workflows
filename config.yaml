@@ -13,7 +13,7 @@ config:
         linear_alpha: 16
       save:
         dtype: float16
-        save_every: 1000
+        save_every: 100
         max_step_saves_to_keep: 4
         push_to_hub: false
       datasets:
@@ -25,7 +25,7 @@ config:
           resolution: [ 512, 768, 1024 ]
       train:
         batch_size: 1
-        steps: 1000
+        steps: 100
         gradient_accumulation_steps: 1
         train_unet: true
         train_text_encoder: false
@@ -44,7 +44,7 @@ config:
         quantize: true
       sample:
         sampler: "flowmatch"
-        sample_every: 250
+        sample_every: 100
         width: 1024
         height: 1024
         prompts:
