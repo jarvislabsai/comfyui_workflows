@@ -13,7 +13,7 @@ config:
         linear_alpha: 16
       save:
         dtype: float16
-        save_every: 250
+        save_every: 1000
         max_step_saves_to_keep: 4
         push_to_hub: false
       datasets:
